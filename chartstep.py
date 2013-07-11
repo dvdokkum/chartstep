@@ -7,7 +7,6 @@ import time
 import signal 
 import sys
 
-
 #ENTER API KEY HERE#
 APIkey = ""
 
