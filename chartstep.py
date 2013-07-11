@@ -13,12 +13,16 @@ APIkey = ""
 
 #initiate Arduino connection
 
-Stepper=InstrumentControl.StepperMotor('/dev/tty.usbmodem1411')
+Stepper=InstrumentControl.StepperMotor('/dev/tty.usbmodem1411') #change this to your Arduino address
+
+#speed settings
+fast = 200
+slow = 9000
 
 ### PROGRAM LOOP ###
 
 while 1:
-
+	Stepper.SetDelay(fast)
 	Stepper.SetPosition(1,1,0)
 	print("")
 	print("What domain?")
@@ -69,27 +73,31 @@ while 1:
 		min = historical['data'][domain]['people']['min']
 	
 		#angle formula
-		if domain == 'status.chartbeat.net':
-			angle = ((current / max) * 120) + 30
-		else:
-			angle = ((current / (max - min)) * 120) + 30
+		angle = ((current / max) * 120)
 		
 		#print "30 day max is: " + str(max)
 		#print "30 day min is: " + str(min)
 		#print "currently: " + str(current)
 		
-		steps = (angle * 800) // 180
+		steps = (angle * 533.333333) // 120
 
 		print str(angle) + " degrees"
+		print steps
 		return steps
 	
 ### API LIVE LOOP ###
 	
 	try:
+
+		goSteps = getSteps(domain)+4800
+		Stepper.SetDelay(fast)
 		Stepper.SetPosition(1,1,4800)
+		Stepper.SetDelay(slow)
+		Stepper.SetPosition(1,1,goSteps)
+
 		while 1:
-			Stepper.SetPosition(1,1,getSteps(domain))
 			time.sleep(5)
+			Stepper.SetPosition(1,1,getSteps(domain) + 4800)
 	
 	except: KeyboardInterrupt
 	print("Quiting...")
