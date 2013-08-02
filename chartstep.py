@@ -81,13 +81,12 @@ while 1:
 		steps = (angle * 533.333333) // 120
 
 		print str(angle) + " degrees"
-		print steps
+		#print steps
 		return steps
 	
 ### API LIVE LOOP ###
 	
 	try:
-
 		goSteps = getSteps(domain)+4800
 		Stepper.SetDelay(fast)
 		Stepper.SetPosition(1,1,4800)
